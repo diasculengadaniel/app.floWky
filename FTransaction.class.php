@@ -4,6 +4,7 @@
 * */
 final class FTransaction{
  private static $conn;
+ private static $logger;
 
  private function __construct(){}
  
@@ -11,6 +12,7 @@ final class FTransaction{
    if(empty(self::$conn)){
     self::$conn = FConnection::open($database);
     self::$conn->beginTransaction();
+    self::$logger = NULL;
    }
   }
 
@@ -29,6 +31,16 @@ final class FTransaction{
    self::$conn->commit();
    self::$conn = NULL;
   } 
+ }
+
+ public static function setLogger(FLogger $logger){
+  self::$logger = $logger;
+ }
+
+ public static function log($message){
+  if(self::$logger){
+   self::$logger-write($message);
+  }
  }
 }
 ?>
