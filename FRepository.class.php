@@ -28,5 +28,9 @@ final class FRepository{
    throw new Exception('Do not have active transaction');
   }
  }
+
+ function delete(FCriteria $criteria){
+  
+ }
 }
 ?>
