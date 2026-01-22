@@ -96,5 +96,23 @@ abstract class FRecord{
    throw new Exception('Do not have active transaction');
   }
  }
+
+ public function delete($id){
+  $id = $id ? $id : $this->id;
+  $sql = new FSqlDelete;
+  $sql->setEntity($this->getEntity());
+
+  $criteria = new FCriteria;
+  $criteria->add(new FFilter('id','=',$id));
+  $sql->setCriteria($criteria);
+
+  if($conn = FTransaction::get()){
+   FTransaction::log($sql->getInstruction());
+   $result = $conn->exec($sql->getInstruction());
+   return $result;
+  }else{
+   throw new Exception('Do not have active transaction');
+  }
+ }
 }
 ?>
