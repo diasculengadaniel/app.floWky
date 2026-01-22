@@ -42,5 +42,24 @@ final class FRepository{
    throw new Exception('Do not have active transaction');
   }
  }
+
+ function count(FCriteria $criteria){
+  $sql = new FSqlSelect;
+  $sql->addColumn('count(*)');
+  $sql->setEntity($this->class);
+  $sql->setCriteria($criteria);
+
+  if($conn = FTransaction::get()){
+   FTRansaction::log($sql->getInstruction());
+   $result= $conn->Query($sql->getInstruction());
+
+   if($result){
+    $row = $result->fetch();
+   }
+   return $row[0];
+  }else{
+   throw new Exception('Do not have active transaction');
+  }
+ }
 }
 ?>
