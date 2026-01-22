@@ -30,7 +30,17 @@ final class FRepository{
  }
 
  function delete(FCriteria $criteria){
-  
+  $sql = new FSqlDelete;
+  $sql->setEntity($this->class);  
+  $sql->setCriteria($criteria);
+
+  if($conn = FTransaction::get()){
+   FTransaction::log($sql->getInstruction());
+   $result = $conn->exec($sql->getInstruction());
+   return $result;
+  }else{
+   throw new Exception('Do not have active transaction');
+  }
  }
 }
 ?>
