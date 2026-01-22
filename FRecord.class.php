@@ -114,5 +114,18 @@ abstract class FRecord{
    throw new Exception('Do not have active transaction');
   }
  }
+
+ private function getLast(){
+  if($conn = FTransaction::get()){
+   $sql = new FSqlSelect;
+   $sql->addColumn('max(ID) as ID');
+   $sql->setEntity($this->getEntity());
+   FTransaction::log($sql->getInstruction());
+   $row = $result->fetch();
+   return $row[0];
+  }else{
+   throw new Exception('Do not have active transaction');
+  }
+ }
 }
 ?>
