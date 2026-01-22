@@ -76,5 +76,25 @@ abstract class FRecord{
    throw new Exception('Do not have active transaction');
   }
  }
+
+ public function load($id){
+  $sql = new FSqlSelect;
+  $sql->setEntity($this->getEntity());
+  $sql->addColumn('*');
+
+  $criteria = new FCriteria;
+  $criteria->add(new FFilter('id','=',$id));
+  $sql->setCriteria($criteria);
+  if($conn = FTransaction::get()){
+   FTransaction::log($sql->getInstruction());
+   $result = $conn->Query($sql->getInstruction());
+   if($result){
+    $object = $result->fetchObject(get_class($this));
+   }
+   return $object;
+  }else{
+   throw new Exception('Do not have active transaction');
+  }
+ }
 }
 ?>
